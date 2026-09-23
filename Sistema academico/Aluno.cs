@@ -7,11 +7,11 @@ namespace Sistema_academico
 {
     class Aluno : Pessoa,IRelatorio
     {
-        public string Matricula { get; set; }
-        public double[] Notas { get; set; }
+        private string Matricula { get; set; }
+        private double[] Notas { get; set; }
         private static readonly string[] Materias = { "Matemática", "Português", "História" };
 
-        public Aluno(string nome, int cpf, int dataNascimento, string matricula, Double[] notas)
+        public Aluno(string nome, string cpf, DateTime dataNascimento, string matricula, Double[] notas)
             : base(nome, cpf, dataNascimento)
         {
             Matricula = matricula;
@@ -22,6 +22,7 @@ namespace Sistema_academico
         {
             base.ExibirInformacoes();
             Console.WriteLine($"Matrícula: {Matricula}");
+
             Console.WriteLine($"Boletim");
 
             for( int i = 0; i < Notas.Length; i++)
@@ -29,6 +30,11 @@ namespace Sistema_academico
                 Console.WriteLine($"{Materias[i]}: {Notas[i]}");
             }
 
+        }
+
+        public void Mostrar()
+        {
+            ExibirInformacoes(); // chamada aqui DENTRO da classe funciona, porque é protected acessado de dentro
         }
         public string GerarRelatorio()
         {

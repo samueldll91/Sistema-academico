@@ -6,11 +6,11 @@ namespace Sistema_academico
 {
     class Pessoa
     {
-       protected string? Nome { get; set; }
-       protected int? Cpf { get; set; }
-       protected int? DataNascimento { get; set; }
+       protected string Nome { get; set; }
+       protected string Cpf { get; set; }
+       protected  DateTime DataNascimento { get; set; }
 
-        public Pessoa(string nome, int cpf, int dataNascimento)
+        public Pessoa(string nome, string cpf,  DateTime dataNascimento)
         {
             Nome = nome;
             Cpf = cpf;
@@ -23,8 +23,10 @@ namespace Sistema_academico
         protected virtual void ExibirInformacoes()
         {
             Console.WriteLine($"Nome: {Nome}");
+            Console.WriteLine();
             Console.WriteLine($"CPF: {Cpf}");
-            Console.WriteLine($"Data de Nascimento: {DataNascimento}");
+            Console.WriteLine();
+            Console.WriteLine($"Data de Nascimento: {DataNascimento:dd/MM/yyyy}");
         }
 
     }
