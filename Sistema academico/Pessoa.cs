@@ -27,6 +27,7 @@ namespace Sistema_academico
             Console.WriteLine($"CPF: {Cpf}");
             Console.WriteLine();
             Console.WriteLine($"Data de Nascimento: {DataNascimento:dd/MM/yyyy}");
+            Console.WriteLine();
         }
 
     }

@@ -22,7 +22,7 @@ namespace Sistema_academico
         {
             base.ExibirInformacoes();
             Console.WriteLine($"Matrícula: {Matricula}");
-
+            Console.WriteLine();
             Console.WriteLine($"Boletim");
 
             for( int i = 0; i < Notas.Length; i++)

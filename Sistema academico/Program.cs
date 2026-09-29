@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Sistema_academico
 {
@@ -61,22 +62,43 @@ namespace Sistema_academico
             //metodo valido para eu ler o os meus atributos de data, cpf e double, para não ficar repetindo o mesmo código em cada cadastro ///////////////////////////////////////////////////////////////////////////////////////////////////////
             static DateTime LerData(string mensagem)
             {
-                DateTime valor;
+                DateTime datanascimento;
                 bool valido;
 
                 do
                 {
                     Console.Write(mensagem);
-                    valido = DateTime.TryParse(Console.ReadLine(), out valor);
+                    valido = DateTime.TryParse(Console.ReadLine(), out datanascimento);
 
                     if (!valido)
                         Console.WriteLine("Data inválida! Use o formato dd/mm/aaaa.");
 
                 } while (!valido);
 
-                return valor;
+                return datanascimento;
             }
-        
+            static int LerMatricula(string mensagem)
+            {
+                int matricula;
+                bool valido;
+
+                do
+                {
+                    Console.Write(mensagem);
+                    bool convertida = int.TryParse(Console.ReadLine(), out matricula);
+
+                    // válido se converteu E está entre 100000 (menor número de 6 dígitos)
+                    // e 999999 (maior número de 6 dígitos)
+                    valido = convertida && matricula >= 100000 && matricula <= 999999;
+
+                    if (!valido)
+                        Console.WriteLine("Matrícula inválida! Digite um número com exatamente 6 dígitos.");
+
+                } while (!valido);
+
+                return matricula;
+            }
+
             static string LerCpf(string mensagem)
             {
                 string cpf;
@@ -92,7 +114,7 @@ namespace Sistema_academico
                 } while (!valido);
                 return cpf;
             }
-
+            
 
             static double LerDouble(string mensagem)
             {
@@ -108,10 +130,43 @@ namespace Sistema_academico
                 return valor;
             }
 
-          
+
+            static int LerInt(string mensagem)
+            {
+                int valor;
+                bool valido;
+                do
+                {
+                    Console.Write(mensagem);
+                    valido = int.TryParse(Console.ReadLine(), out valor);
+                    if (!valido)
+                        Console.WriteLine("Valor inválido! Digite um número inteiro válido.");
+                } while (!valido);
+                return valor;
+            }
+
+            static string Lernome(string mensagem)
+            {
+                string nome;
+                bool valido;
+
+                do
+                {
+                    Console.Write(mensagem);
+                    nome = Console.ReadLine();
+                    valido = nome.Length > 0 && !nome.Any(char.IsDigit);
+                    if (!valido)
+                        Console.WriteLine("Nome invaldio!Não pode conter números! ");
+
+                } while (!valido);
+                return nome;
+            }
 
 
-            
+
+
+
+
 
 
             // FECHANDO METODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
@@ -122,8 +177,7 @@ namespace Sistema_academico
                 try
                 {
                     Console.WriteLine();
-                    Console.WriteLine("Digite seu nome");
-                    string nome = Console.ReadLine();
+                    string nome = Lernome("Digite seu nome : ");
                     Console.WriteLine();
 
                     string cpf = LerCpf("CPF (somente números, 11 dígitos): ");
@@ -134,10 +188,9 @@ namespace Sistema_academico
                     DateTime dataNascimento = LerData("Data de Nascimento (dd/mm/aaaa): ");
                     Console.WriteLine();
 
-                    Console.WriteLine("Digite o Numero da Sua Matricula : ");
-                    string matricula = Console.ReadLine();
-                // Array fixo de 3 notas
-                double[] notas = new double[3];
+                    string matricula = LerMatricula("Matrícula (6 dígitos): ").ToString();
+                    // Array fixo de 3 notas
+                    double[] notas = new double[3];
                 notas[0] = LerDouble("Nota de Matemática: ");
                 notas[1] = LerDouble("Nota de Português: ");
                 notas[2] = LerDouble("Nota de História: ");
@@ -187,12 +240,35 @@ namespace Sistema_academico
 
                  static void CadastrarProfessor()
             {
+                try
+                {
+                    Console.WriteLine();
+                    string nome = Lernome("Digite seu nome : ");
+                    Console.WriteLine();
+
+                    string cpf = LerCpf("CPF (somente números, 11 dígitos): ");
+                    Console.WriteLine();
+
+
+
+                    DateTime dataNascimento = LerData("Data de Nascimento (dd/mm/aaaa): ");
+                    Console.WriteLine();
+
+                    string matricula = LerMatricula("Matrícula (6 dígitos): ").ToString();
+
+                   
+
+                }
+                catch (Exception ex)
+                {
+                    // Rede de segurança: qualquer erro inesperado não derruba o programa
+                    Console.WriteLine($"Erro ao cadastrar aluno: {ex.Message}");
+                }
 
             }
 
 
-
-            static void ListarTodos()
+                static void ListarTodos()
             {
 
             }
