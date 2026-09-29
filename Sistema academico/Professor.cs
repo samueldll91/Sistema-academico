@@ -1,20 +1,24 @@
-﻿using System;
+﻿using Sistema_academico.Interface;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Sistema_academico
 {
-    class Professor : Pessoa
+    class Professor : Pessoa, IRelatorio
     {
-        private int Salario { get; set; }
-        private List<string> Turmas { get; set; }
+        private double Salario { get; set; }
+        public List<string> Turmas { get; set; }
 
 
-        public Professor(string nome, string cpf, DateTime dataNascimento, int salario, List<string> turmas)
+
+        public Professor(string nome, string cpf, DateTime dataNascimento, double salario)
        : base(nome, cpf, dataNascimento)
         {
             Salario = salario;
-            Turmas = turmas;
+            
+            Turmas = new List<string>();
+
         }
 
         protected override void ExibirInformacoes()
@@ -34,21 +38,15 @@ namespace Sistema_academico
             }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         }
 
-
-
+        public void ExibirDados()
+        {
+            ExibirInformacoes(); // chamada aqui DENTRO da classe funciona, porque é protected acessado de dentro
+        }
+        public string GerarRelatorio()
+        {
+            return $"[PROFESSOR] {Nome} - {Turmas.Count} turma(s) - Salário {Salario:C2}";
+        }
     }
 }

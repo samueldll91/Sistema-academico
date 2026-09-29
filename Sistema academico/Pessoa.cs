@@ -6,17 +6,18 @@ namespace Sistema_academico
 {
     class Pessoa
     {
-       protected string Nome { get; set; }
-       protected string Cpf { get; set; }
-       protected  DateTime DataNascimento { get; set; }
+        protected string Nome { get; set; }
+        protected string Cpf { get; set; }
+        protected DateTime DataNascimento { get; set; }
 
-        public Pessoa(string nome, string cpf,  DateTime dataNascimento)
+
+        public Pessoa(string nome, string cpf, DateTime dataNascimento)
         {
             Nome = nome;
             Cpf = cpf;
             DataNascimento = dataNascimento;
 
-            
+
         }
 
 
@@ -30,5 +31,9 @@ namespace Sistema_academico
             Console.WriteLine();
         }
 
+        public void ExibirDados()
+        {
+            ExibirInformacoes(); // chamada aqui DENTRO da classe funciona, porque é protected acessado de dentro
+        }
     }
 }

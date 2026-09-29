@@ -1,9 +1,10 @@
-﻿using System.Globalization;
+﻿using Sistema_academico.Interface;
+using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Sistema_academico
 {
-     class Program
+    class Program
     {
         static List<Aluno> listaAlunos = new List<Aluno>();
         static List<Professor> listaProfessores = new List<Professor>();
@@ -22,7 +23,7 @@ namespace Sistema_academico
                 Console.WriteLine("3 - Listar todos (relatório geral)");
                 Console.WriteLine("0 - Sair");
                 Console.Write("Escolha uma opção: ");
-                
+
 
                 bool opcaoValida = int.TryParse(Console.ReadLine(), out opcao);
                 if (!opcaoValida)
@@ -30,9 +31,9 @@ namespace Sistema_academico
                     Console.WriteLine("Opção inválida. Digite um número.");
                     opcao = -1; // valor "neutro" só pra não bater com nenhum case e não sair do loop
                     continue;
-                  
+
                 }
-                
+
 
                 switch (opcao)
                 {
@@ -68,8 +69,14 @@ namespace Sistema_academico
                 do
                 {
                     Console.Write(mensagem);
-                    valido = DateTime.TryParse(Console.ReadLine(), out datanascimento);
 
+                 valido = DateTime.TryParseExact(
+                 Console.ReadLine(),
+                 "dd/MM/yyyy",
+                 CultureInfo.InvariantCulture,
+                 DateTimeStyles.None,
+                 out datanascimento
+                 );
                     if (!valido)
                         Console.WriteLine("Data inválida! Use o formato dd/mm/aaaa.");
 
@@ -77,6 +84,8 @@ namespace Sistema_academico
 
                 return datanascimento;
             }
+
+            //metodo matricula
             static int LerMatricula(string mensagem)
             {
                 int matricula;
@@ -114,7 +123,7 @@ namespace Sistema_academico
                 } while (!valido);
                 return cpf;
             }
-            
+
 
             static double LerDouble(string mensagem)
             {
@@ -156,7 +165,7 @@ namespace Sistema_academico
                     nome = Console.ReadLine();
                     valido = nome.Length > 0 && !nome.Any(char.IsDigit);
                     if (!valido)
-                        Console.WriteLine("Nome invaldio!Não pode conter números! ");
+                        Console.WriteLine("Nome invaldio! Não pode ser vazio ou  conter números! ");
 
                 } while (!valido);
                 return nome;
@@ -183,7 +192,7 @@ namespace Sistema_academico
                     string cpf = LerCpf("CPF (somente números, 11 dígitos): ");
                     Console.WriteLine();
 
-               
+
 
                     DateTime dataNascimento = LerData("Data de Nascimento (dd/mm/aaaa): ");
                     Console.WriteLine();
@@ -191,30 +200,34 @@ namespace Sistema_academico
                     string matricula = LerMatricula("Matrícula (6 dígitos): ").ToString();
                     // Array fixo de 3 notas
                     double[] notas = new double[3];
-                notas[0] = LerDouble("Nota de Matemática: ");
-                notas[1] = LerDouble("Nota de Português: ");
-                notas[2] = LerDouble("Nota de História: ");
+                    notas[0] = LerDouble("Nota de Matemática: ");
+                    notas[1] = LerDouble("Nota de Português: ");
+                    notas[2] = LerDouble("Nota de História: ");
 
-                Aluno novoAluno = new Aluno(nome, cpf, dataNascimento, matricula, notas);
-                listaAlunos.Add(novoAluno);
+                   
+                    Console.Clear();
+                    Aluno novoAluno = new Aluno(nome, cpf, dataNascimento, matricula, notas);
+                    listaAlunos.Add(novoAluno);
 
-                Console.WriteLine();
+                    Console.WriteLine();
                     Console.Clear();
                     Console.WriteLine("------------------------------");
-                Console.WriteLine("Aluno cadastrado com sucesso!");
+                    
+                    Console.WriteLine("Aluno cadastrado com sucesso!");
                     Console.WriteLine("------------------------------");
                     novoAluno.Mostrar();
+                    Console.WriteLine();
+                    Console.WriteLine("Digite Qualquer Tecla para sair");
+                    Console.ReadKey();
+                    Console.Clear();
 
+                }
+                catch (Exception ex)
+                {
+                    // Rede de segurança: qualquer erro inesperado não derruba o programa
+                    Console.WriteLine($"Erro ao cadastrar aluno: {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                // Rede de segurança: qualquer erro inesperado não derruba o programa
-                Console.WriteLine($"Erro ao cadastrar aluno: {ex.Message}");
-            }
-        }
-
- 
-            
 
 
 
@@ -238,7 +251,10 @@ namespace Sistema_academico
 
 
 
-                 static void CadastrarProfessor()
+
+
+
+            static void CadastrarProfessor()
             {
                 try
                 {
@@ -256,27 +272,75 @@ namespace Sistema_academico
 
                     string matricula = LerMatricula("Matrícula (6 dígitos): ").ToString();
 
-                   
+                    double salario = LerDouble("Salario : ");
 
+
+
+                    Professor novoProfessor = new Professor(nome, cpf, dataNascimento, salario);
+                    int quantidadeTurmas = LerInt("Quantas turmas esse professor leciona? ");
+
+                    for (int i = 1; i <= quantidadeTurmas; i++)
+                    {
+                        Console.Write($"Nome da turma {i}: ");
+                        string nomeTurma = Console.ReadLine();
+                        novoProfessor.Turmas.Add(nomeTurma);
+                    }
+                    listaProfessores.Add(novoProfessor);
+
+                    Console.WriteLine();
+                    Console.Clear();
+                    Console.WriteLine("Professor cadastrado com sucesso!");
+                    novoProfessor.ExibirDados();
+                    
                 }
                 catch (Exception ex)
                 {
-                    // Rede de segurança: qualquer erro inesperado não derruba o programa
-                    Console.WriteLine($"Erro ao cadastrar aluno: {ex.Message}");
+                    Console.WriteLine($"Erro ao cadastrar professor: {ex.Message}");
                 }
-
             }
 
+        }
 
-                static void ListarTodos()
+
+
+
+
+        static void ListarTodos()
+            
+        {
+           
+            if (listaAlunos.Count == 0 && listaProfessores.Count == 0)
             {
-
+                Console.WriteLine("Nenhum cadastro encontrado ainda.");
+                return;
             }
+
+            // Junta Alunos e Professores numa única lista do tipo Pessoa.
+            // Isso só é possível por causa da HERANÇA (os dois "são" Pessoa).
+            List<Pessoa> todasAsPessoas = new List<Pessoa>();
+            todasAsPessoas.AddRange(listaAlunos);
+            todasAsPessoas.AddRange(listaProfessores);
+
+           
+          
+
+            Console.WriteLine("===== RELATÓRIO RESUMIDO (via Interface) =====");
+            foreach (Pessoa pessoa in todasAsPessoas)
+            {
+                // INTERFACE em ação: só funciona porque Aluno e Professor
+                // implementar IRelatorio
+                if (pessoa is IRelatorio relatorio)
+                {
+                    Console.WriteLine(relatorio.GerarRelatorio());
+                }
+            }
+            Console.WriteLine();
 
 
 
 
         }
+    }
 }
-}
+
 
